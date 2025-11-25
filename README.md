@@ -31,6 +31,6 @@ Para estudar o ataque, nós criamos um ambiente de teste que simula um site real
 
 ## 🤝 Quem Fez
 
-* **Aluno(s):** [Seu Nome Completo]
-* **Orientador(a):** Prof(a). [Nome do(a) Orientador(a)]
-* **Disciplina:** [Nome da Sua Disciplina] - [Sua Instituição]
+* **Aluno(s):** Pedro Emanuel Valadares Ribeiro - 123223309(RA), Jonathan Espíndola - 1252211620392(RA), Eduardo Aguiar Da Silva - 125111406218(RA), João Victor da Silva - 125111385103(RA) 
+* **Orientador(a):** Prof(a). Alexandre Montanha
+* **Disciplina:** Sistemas Computacionais e Segurança - UniBH
